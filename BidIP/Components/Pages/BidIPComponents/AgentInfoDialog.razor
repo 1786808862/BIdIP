@@ -1,0 +1,26 @@
+﻿@using BidIP.Models
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h4" Style="text-align: center">
+            @bidIpModel.Name
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@bidIpModel.Name" Label="Name" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@bidIpModel.IpAddress" Label="IpAddress" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@(((int)(DateTime.Now - bidIpModel.LastTime).TotalSeconds) + "s前" + "  " + bidIpModel.LastTime)" Label="LastTime" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@(((int)(DateTime.Now - bidIpModel.LastSSYTime).TotalSeconds) + "s前" + "  " + bidIpModel.LastSSYTime)" Label="LastSSYTime" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public BidIpModel bidIpModel { get; set; } = new BidIpModel();
+
+    private void Cancel() => MudDialog.Cancel();
+}

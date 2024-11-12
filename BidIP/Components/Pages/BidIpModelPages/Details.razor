@@ -1,0 +1,54 @@
+﻿@page "/bidipmodels/details"
+@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>BidIpModel</h2>
+    <hr />
+    @if (bidipmodel is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@bidipmodel.Name</dd>
+            <dt class="col-sm-2">IpAddress</dt>
+            <dd class="col-sm-10">@bidipmodel.IpAddress</dd>
+            <dt class="col-sm-2">LastTime</dt>
+            <dd class="col-sm-10">@bidipmodel.LastTime</dd>
+            <dt class="col-sm-2">LastSSYTime</dt>
+            <dd class="col-sm-10">@bidipmodel.LastSSYTime</dd>
+            <dt class="col-sm-2">SsyCount</dt>
+            <dd class="col-sm-10">@bidipmodel.SsyCount</dd>
+        </dl>
+        <div>
+            <a href="@($"/bidipmodels/edit?id={bidipmodel.Id}")">Edit</a> |
+            <a href="@($"/bidipmodels")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private BidIpModel? bidipmodel;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        bidipmodel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (bidipmodel is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -1,0 +1,96 @@
+﻿@page "/bidip"
+@using BidIP.Models
+@using BidIP.Components.Pages.BidIPComponents
+@using System.Linq;
+@inject HttpClient Http
+
+<MyMudDrawer AgentInfoDictionaryChange="HandleSubmit" myDictionary="myDictionary" type="search" />
+
+<MudCard Style="margin-top: 25px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+    <MudCardContent>
+        <MudGrid Justify="Justify.SpaceBetween" Style="margin-bottom: 30px">
+            <MudItem xs="6" sm="6" md="5" lg="4" xl="4">
+                <MudButton Variant="Variant.Filled" OnClick="searchDrawer" Style="margin-right:50px">Search</MudButton>
+                <MudButtonGroup Color="Color.Tertiary" Size="Size.Small" Variant="Variant.Filled">
+                    <MudButton OnClick="() => SearchName(null)">All</MudButton>
+                    <MudButton OnClick="() => SearchName(JA)">JA</MudButton>
+                    <MudButton OnClick="() => SearchName(JD)">JD</MudButton>
+                </MudButtonGroup>
+            </MudItem>
+            <MudItem xs="3" sm="3" md="2" lg="1" xl="1">
+                <MudToggleGroup T="string" @bind-Value="type">
+                    <MudToggleItem Value="@("Table")">
+                        <MudIcon Icon="@Icons.Material.Filled.TableRows" />
+                    </MudToggleItem>
+                    <MudToggleItem Value="@("Grid")">
+                        <MudIcon Icon="@Icons.Material.Filled.TableView" />
+                    </MudToggleItem>
+                </MudToggleGroup>
+            </MudItem>
+        </MudGrid>
+        <DynamicComponent Type="@(type.Equals("Table") ? typeof(Table) : typeof(Grid))" Parameters="@agentInfoDictionary"></DynamicComponent>
+    </MudCardContent>
+</MudCard>
+@code {
+    private bool _open;
+    BidIpModel bidIpModel = new BidIpModel(1, "", "", DateTime.Now, DateTime.Now, 1);
+    private MudForm form;
+    private string name;
+    private string ipAddress;
+    private int? lastTime;
+    private int? lastSSYTime;
+    private int? ssyCount;
+    private int[] lastTimeArr = { 15, 30, 60, 300, 600 };
+    private int[] lastSSYTimeArr = { 15, 30, 60, 300, 600 };
+    private int[] ssyCountArr = { 500, 1000, 1500, 2000, 3000 };
+    private string responseMessage;
+    private int totalItems;
+    private Dictionary<string, object> agentInfoDictionary = new Dictionary<string, object>();
+    private Dictionary<string, Boolean> myDictionary = new Dictionary<string, Boolean>()
+    {
+        {"_open",false}
+    };
+    private string type = "Table";
+
+    private string JA = "JA";
+    private string JD = "JD";
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<BidIpModel> bidIpModels = await Http.GetFromJsonAsync<List<BidIpModel>>("agent/status") ?? [];
+        agentInfoDictionary["agentInfo"] = bidIpModels.OrderBy(m => m.Id).ToList();
+    }
+
+    private async Task SearchName(string name)
+    {
+        try
+        {
+
+            // 将数据作为 JSON 发送
+            var response = await Http.GetFromJsonAsync<List<BidIpModel>>($"agent/status?Name={name}") ?? [];
+            if (response != null)
+            {
+                agentInfoDictionary["agentInfo"] = response.OrderBy(m => m.Id).ToList();
+                responseMessage = "表单提交成功！";
+            }
+            else
+            {
+                responseMessage = "提交失败，请重试。";
+            }
+        }
+        catch (Exception ex)
+        {
+            responseMessage = $"提交失败: {ex.Message}";
+        }
+    }
+
+    private void HandleSubmit(List<BidIpModel> bidIpModels)
+    {
+        agentInfoDictionary["agentInfo"] = bidIpModels;
+    }
+
+    private void searchDrawer ()
+    {
+        myDictionary["_open"] = true;
+    }
+}

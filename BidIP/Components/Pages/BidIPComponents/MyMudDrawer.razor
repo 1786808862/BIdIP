@@ -1,0 +1,150 @@
+﻿@using BidIP.Models
+@using BidIP.Components.Pages.BidIPComponents
+@using System.Linq;
+@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject HttpClient Http
+
+
+<MudDrawer @bind-Open="@myDictionary["_open"]" Anchor="Anchor.End" Width="300px" Elevation="1" Variant="@DrawerVariant.Temporary" OverlayAutoClose="true">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6" Style="margin: auto;">Search</MudText>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudForm @ref="form" Style="margin: 0 20px">
+            <MudTextField @bind-Value="name" Label="Please Input Name" Style="margin: 20px 0;" />
+            <MudTextField @bind-Value="ipAddress" Label="Please Input IpAddress" Style="margin: 20px 0;" />
+            @if (type == "search")
+            {
+                <MudSelect T="int?" @bind-Value="lastTimeSearch" Label="Please Choose LastTime" Style="margin: 20px 0;">
+                    <MudSelectItem T="int?" Value="null">All</MudSelectItem>
+                    @foreach (int x in lastTimeArr)
+                    {
+                        <MudSelectItem T="int?" Value="@(x)">@(x)</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSelect T="int?" @bind-Value="lastSSYTimeSearch" Label="Please Choose lastSSYTime" Style="margin: 20px 0;">
+                    <MudSelectItem T="int?" Value="null">All</MudSelectItem>
+                    @foreach (int x in lastSSYTimeArr)
+                    {
+                        <MudSelectItem T="int?" Value="@(x)">@(x)</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSelect T="int?" @bind-Value="ssyCount" Label="Please Choose ssyCount" Style="margin: 20px 0;">
+                    <MudSelectItem T="int?" Value="null">All</MudSelectItem>
+                    @foreach (int x in ssyCountArr)
+                    {
+                        <MudSelectItem T="int?" Value="@(x)">@(x)</MudSelectItem>
+                    }
+                </MudSelect>
+            } else
+            {
+                <MudDatePicker Label="LastTimeDate" Editable="true" @bind-Date="_lastTimeDateTime" Placeholder="Select Date" />
+                <MudTimePicker Label="LastTime" Editable="true" @bind-Time="_lastTimeSpan" />
+                <MudDatePicker Label="LastSSYTimeDate" Editable="true" @bind-Date="_lastSSYTimeDateTime" Placeholder="Select Date" />
+                <MudTimePicker Label="LastSSYTime" Editable="true" @bind-Time="_lastSSYTimeSpan" />
+                <MudTextField T="int?" Label="SsyCount" Type="number" @bind-Value="ssyCount" />
+            }
+            <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Variant="Variant.Filled" FullWidth=" true " OnClick="HandleSubmit" Style="margin: 20px 0;">@type</MudButton>
+        </MudForm>
+    </MudNavMenu>
+</MudDrawer>
+@code {
+
+    private MudForm form;
+    private string name;
+    private string ipAddress;
+    private int? lastTimeSearch;
+    private int? lastSSYTimeSearch;
+    private DateTime lastTime;
+    private DateTime lastSSYTime;
+    private int? ssyCount;
+    private int[] lastTimeArr = { 15, 30, 60, 300, 600 };
+    private int[] lastSSYTimeArr = { 15, 30, 60, 300, 600 };
+    private int[] ssyCountArr = { 500, 1000, 1500, 2000, 3000 };
+    private string responseMessage;
+    private TimeSpan? _lastTimeSpan;
+    private DateTime? _lastTimeDateTime = DateTime.Today;
+    private TimeSpan? _lastSSYTimeSpan;
+    private DateTime? _lastSSYTimeDateTime = DateTime.Today;
+    private BidIpModel existingModel = new BidIpModel();
+    [Parameter]
+    public Boolean _open { get; set; } = false;
+
+    [Parameter]
+    public Dictionary<string, Boolean> myDictionary { get; set; } = new Dictionary<string, Boolean>()
+    {
+        {"_open", false }
+    };
+
+    [Parameter]
+    public string type { get; set; }
+
+    [Parameter]
+    public BidIpModel bidIpModel { get; set; }
+
+    [Parameter]
+    public EventCallback<List<BidIpModel>> AgentInfoDictionaryChange { get; set; }  // 用于触发父组件更新
+
+    [Parameter]
+    public EventCallback<Boolean> OnDataChanged { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        if (type.Equals("search"))
+        {
+            try
+            {
+                // 将数据作为 JSON 发送
+                var response = await Http.GetFromJsonAsync<List<BidIpModel>>($"agent/status?Name={name}&IpAddress={ipAddress}&LastTime={lastTimeSearch}&LastSSYTime={lastSSYTimeSearch}&SsyCount={ssyCount}") ?? [];
+
+                if (response != null)
+                {
+                    await AgentInfoDictionaryChange.InvokeAsync(response.OrderBy(m => m.Id).ToList());
+                    responseMessage = "表单提交成功！";
+                }
+                else
+                {
+                    responseMessage = "提交失败，请重试。";
+                }
+            }
+            catch (Exception ex)
+            {
+                responseMessage = $"提交失败: {ex.Message}";
+            }
+            finally
+            {
+                myDictionary["_open"] = false;
+                name = "";
+                ipAddress = "";
+                lastTimeSearch = null;
+                lastTimeSearch = null;
+                lastSSYTimeSearch = null;
+            }
+        } else
+        {
+            existingModel.Id = bidIpModel.Id;
+            existingModel.Name = name;
+            existingModel.IpAddress = ipAddress;
+            existingModel.LastTime = _lastTimeDateTime.Value + _lastTimeSpan.Value;
+            existingModel.LastSSYTime = _lastSSYTimeDateTime.Value + _lastSSYTimeSpan.Value;
+            existingModel.SsyCount = ssyCount.Value;
+            using var context = DbFactory.CreateDbContext();
+            context.Attach(existingModel).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            myDictionary["_open"] = false;
+        }
+    }
+    public void SetDrawerValue(BidIpModel bidIpModel)
+    {
+        name = bidIpModel.Name;
+        ipAddress = bidIpModel.IpAddress;
+        _lastTimeSpan = new TimeSpan(bidIpModel.LastTime.Hour, bidIpModel.LastTime.Minute, bidIpModel.LastTime.Second);
+        _lastTimeDateTime = bidIpModel.LastTime.AddDays(-1);
+        _lastSSYTimeSpan = new TimeSpan(bidIpModel.LastSSYTime.Hour, bidIpModel.LastSSYTime.Minute, bidIpModel.LastSSYTime.Second);
+        _lastSSYTimeDateTime = bidIpModel.LastSSYTime.AddDays(-1);
+        ssyCount = bidIpModel.SsyCount;
+    }
+
+}

@@ -1,0 +1,102 @@
+﻿@using BidIP.Models
+@using System.Linq;
+@inject HttpClient Http
+
+<MudGrid>
+    <MudItem xs="6" sm="6" md="5" lg="2" xl="1">
+        <MudSelect T="string" Value="@_value" ValueChanged="(value) => sortAgentInfo(value, _sortBy)">
+            @foreach (var state in _states)
+            {
+                <MudSelectItem Value="state">@state</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="3" sm="3" md="2" lg="2" xl="1" Style="padding-left: unset">
+        <MudIconButton Size="Size.Small" Icon="@currentIcon" aria-label="Arrow" OnClick="() => sort()" />
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="5">
+    @foreach(var x in agentInfo)
+    {
+        <MudItem xs="6" sm="6" md="3" lg="2" xl="2" xxl="1" >
+            <div class="card">
+                <div class="bg">
+                    <h5 class="mechineName">@x.Name (@x.IpAddress)</h5>
+                    <div class="info-container">
+                        <div class="info-item">
+                            <span class="label">LastTime:</span>
+                            <span class="value" style="@(((int)(DateTime.Now - x.LastTime).TotalSeconds > 15) ? "color: red" : "color : green")">@((int)(DateTime.Now - x.LastTime).TotalSeconds)s</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">LastSSYTime:</span>
+                            <span class="value" style="@(((int)(DateTime.Now - x.LastSSYTime).TotalSeconds > 15) ? "color: red" : "color : green")">@((int)(DateTime.Now - x.LastSSYTime).TotalSeconds)s</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">SsyCount:</span>
+                            <span class="value">@x.SsyCount</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="@(((int)(DateTime.Now - x.LastTime).TotalSeconds < 15) && ((int)(DateTime.Now - x.LastSSYTime).TotalSeconds < 15) ? "blob ok" : "blob danger")"></div>
+            </div>
+        </MudItem>
+    }
+</MudGrid>
+<style>
+    .mud-input > input.mud-input-root-outlined, div.mud-input-slot.mud-input-root-outlined {
+        padding-top: 5px;
+        padding-bottom: 5px
+    }
+</style>
+@code {
+    private bool _loading;
+    private string _value = "Name";
+    private Boolean _sortBy = true;
+    private string[] _states = new string[] { "Name", "LastTime", "LastSSYTime", "SsyCount" };
+    private string currentIcon = Icons.Material.Filled.ArrowUpward;  // 初始图标
+
+    [Parameter]
+    public IEnumerable<BidIpModel> agentInfo { get; set; }
+
+    private void sort ()
+    {
+        _sortBy = !_sortBy;
+        if (currentIcon == Icons.Material.Filled.ArrowUpward)
+        {
+            currentIcon = Icons.Material.Filled.ArrowDownward;
+        }
+        else
+        {
+            currentIcon = Icons.Material.Filled.ArrowUpward;
+        }
+        sortAgentInfo(_value, _sortBy);
+    }
+    public IEnumerable<BidIpModel> sortAgentInfo(string s, Boolean sortBy)
+    {
+        _value = s;
+        switch (s)
+        {
+            case "Name":
+                return agentInfo = sortBy ? agentInfo.OrderBy(x => new string(x.Name.TakeWhile(c => !char.IsDigit(c)).ToArray()))
+                             .ThenBy(x => int.TryParse(new string(x.Name.SkipWhile(c => !char.IsDigit(c)).ToArray()), out int result) ? result : 0)
+                             .ToList() : agentInfo.OrderByDescending(x => new string(x.Name.TakeWhile(c => !char.IsDigit(c)).ToArray()))
+                             .ThenByDescending(x => int.TryParse(new string(x.Name.SkipWhile(c => !char.IsDigit(c)).ToArray()), out int result) ? result : 0)
+                             .ToList();
+            case "LastTime":
+                return agentInfo = sortBy ? agentInfo.OrderByDescending(d => d.LastTime).ToList() : agentInfo.OrderBy(d => d.LastTime).ToList();
+            case "LastSSYTime":
+                return agentInfo = sortBy ? agentInfo.OrderByDescending(d => d.LastSSYTime).ToList() : agentInfo.OrderBy(d => d.LastSSYTime).ToList();
+            case "SsyCount":
+                return agentInfo = sortBy ? agentInfo.OrderBy(s => s.SsyCount).ToList() : agentInfo.OrderByDescending(s => s.SsyCount).ToList();
+        }
+
+        return agentInfo;
+    }
+
+    // 当父组件传递的数据更新时调用
+    protected override void OnParametersSet()
+    {
+        // 根据父组件的数据更新子组件的其他数据
+        sortAgentInfo(_value, _sortBy);
+    }
+}

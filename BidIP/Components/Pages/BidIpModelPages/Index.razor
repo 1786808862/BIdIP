@@ -1,0 +1,51 @@
+﻿@page "/bidipmodels"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BidIP.Models
+@using BidIP.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="bidipmodels/create">Create New</a>
+</p>
+
+<MudTable Items="@tableInfo" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>IpAddress</MudTh>
+        <MudTh>LastTime</MudTh>
+        <MudTh>LastSSYTime</MudTh>
+        <MudTh>SsyCount</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="IpAddress">@context.IpAddress</MudTd>
+        <MudTd DataLabel="LastTime">@context.LastTime</MudTd>
+        <MudTd DataLabel="LastSSYTime">@context.LastSSYTime</MudTd>
+        <MudTd DataLabel="SsyCount">@context.SsyCount</MudTd>
+        <MudTd>
+            <a href="@($"bidipmodels/edit?id={context.Id}")">Edit</a> |
+            <a href="@($"bidipmodels/details?id={context.Id}")">Details</a> |
+            <a href="@($"bidipmodels/delete?id={context.Id}")">Delete</a>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private BidIPContext context = default!;
+    private IEnumerable<BidIpModel> tableInfo;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+        tableInfo = context.BidIpModel;
+    }
+
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

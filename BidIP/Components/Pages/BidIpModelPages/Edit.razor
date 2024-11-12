@@ -1,0 +1,109 @@
+﻿@page "/bidipmodels/edit"
+@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>BidIpModel</h2>
+<hr />
+@if (BidIpModel is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="BidIpModel" OnValidSubmit="UpdateBidIpModel" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="BidIpModel.Id" value="@BidIpModel.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="BidIpModel.Name" class="form-control" />
+                    <ValidationMessage For="() => BidIpModel.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="ipaddress" class="form-label">IpAddress:</label>
+                    <InputText id="ipaddress" @bind-Value="BidIpModel.IpAddress" class="form-control" />
+                    <ValidationMessage For="() => BidIpModel.IpAddress" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="lasttime" class="form-label">LastTime:</label>
+                    <InputDate id="lasttime" @bind-Value="BidIpModel.LastTime" class="form-control" />
+                    <ValidationMessage For="() => BidIpModel.LastTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="lastssytime" class="form-label">LastSSYTime:</label>
+                    <InputDate id="lastssytime" @bind-Value="BidIpModel.LastSSYTime" class="form-control" />
+                    <ValidationMessage For="() => BidIpModel.LastSSYTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="ssycount" class="form-label">SsyCount:</label>
+                    <InputNumber id="ssycount" @bind-Value="BidIpModel.SsyCount" class="form-control" />
+                    <ValidationMessage For="() => BidIpModel.SsyCount" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/bidipmodels">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private BidIpModel? BidIpModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        BidIpModel ??= await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (BidIpModel is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateBidIpModel()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(BidIpModel!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BidIpModelExists(BidIpModel!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/bidipmodels");
+    }
+
+    private bool BidIpModelExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.BidIpModel.Any(e => e.Id == id);
+    }
+}

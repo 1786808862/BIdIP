@@ -1,0 +1,64 @@
+﻿@page "/bidipmodels/create"
+@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>BidIpModel</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="BidIpModel" OnValidSubmit="AddBidIpModel" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="BidIpModel.Name" class="form-control" /> 
+                <ValidationMessage For="() => BidIpModel.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ipaddress" class="form-label">IpAddress:</label> 
+                <InputText id="ipaddress" @bind-Value="BidIpModel.IpAddress" class="form-control" /> 
+                <ValidationMessage For="() => BidIpModel.IpAddress" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="lasttime" class="form-label">LastTime:</label> 
+                <InputDate id="lasttime" @bind-Value="BidIpModel.LastTime" class="form-control" /> 
+                <ValidationMessage For="() => BidIpModel.LastTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="lastssytime" class="form-label">LastSSYTime:</label> 
+                <InputDate id="lastssytime" @bind-Value="BidIpModel.LastSSYTime" class="form-control" /> 
+                <ValidationMessage For="() => BidIpModel.LastSSYTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ssycount" class="form-label">SsyCount:</label> 
+                <InputNumber id="ssycount" @bind-Value="BidIpModel.SsyCount" class="form-control" /> 
+                <ValidationMessage For="() => BidIpModel.SsyCount" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/bidipmodels">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private BidIpModel BidIpModel { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddBidIpModel()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.BidIpModel.Add(BidIpModel);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/bidipmodels");
+    }
+}

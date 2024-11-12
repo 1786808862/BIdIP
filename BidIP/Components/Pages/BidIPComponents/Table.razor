@@ -1,0 +1,85 @@
+﻿@using BidIP.Models
+@using System.Linq;
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject HttpClient Http
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+
+<MudTable Items="@agentInfo" Hover="true" AllowUnsorted="false" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<BidIpModel, object>(x=>{
+                              // 提取字母部分
+                              string letters = new string(x.Name.TakeWhile(char.IsLetter).ToArray());
+                              // 提取数字部分
+                              string numbers = new string(x.Name.SkipWhile(char.IsLetter).ToArray());
+                              // 将字母和数字部分组合为元组，进行排序
+                              return (letters, int.Parse(numbers));
+                          })">Name</MudTableSortLabel>
+        </MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.IpAddress)">Ip Address</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.LastTime)">LastTime(s)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.LastSSYTime)">LastSSYTime(s)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.SsyCount)">SsyCount</MudTableSortLabel></MudTh>
+        <MudTh>操作</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Ip Address">@context.IpAddress</MudTd>
+        <MudTd DataLabel="LastTime"><span style="@(((int)(DateTime.Now - context.LastTime).TotalSeconds) > 15 ? "color: red;" : "color : green;")">@((int)(DateTime.Now - context.LastTime).TotalSeconds)</span></MudTd>
+        <MudTd DataLabel="LastSSYTime"><span style="@(((int)(DateTime.Now - context.LastSSYTime).TotalSeconds) > 15 ? "color: red;" : "color : green;")">@((int)(DateTime.Now - context.LastSSYTime).TotalSeconds)</span></MudTd>
+        <MudTd DataLabel="SsyCount">@context.SsyCount</MudTd>
+        <MudTd DataLabel="Edit">
+            <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
+                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="() => showDetail(context.Id)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => editAgentInfo(context.Id)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="() => deleteAgent(context.Id)" />
+            </MudButtonGroup>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<MyMudDrawer @ref="myTableDrawer" myDictionary="myDictionary" type="edit" bidIpModel="bidIpModel1" />
+
+
+@code {
+    private MyMudDrawer myTableDrawer;
+    private bool _loading;
+    private bool _open = false;
+    private string _type = "edit";
+    private BidIpModel bidIpModel1 = new BidIpModel();
+    private Dictionary<string, Boolean> myDictionary = new Dictionary<string, Boolean>()
+    {
+        {"_open",false}
+    };
+    [Parameter]
+    public IEnumerable<BidIpModel> agentInfo { get; set; }
+
+    private async void showDetail(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        var bidIpModel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == id);
+        var parameters = new DialogParameters<AgentInfoDialog> { { x => x.bidIpModel, bidIpModel } };
+        var dialog = await DialogService.ShowAsync<AgentInfoDialog>("Show Detail", parameters);
+    }
+
+    private void editAgentInfo(int id)
+    {
+        myDictionary["_open"] = true;
+        bidIpModel1 = agentInfo.FirstOrDefault(agent => agent.Id == id);
+        myTableDrawer.SetDrawerValue(bidIpModel1);
+    }
+
+    private async void deleteAgent(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        var bidipmodel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == id);
+        context.BidIpModel.Remove(bidipmodel!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/bidip");
+    }
+
+}
