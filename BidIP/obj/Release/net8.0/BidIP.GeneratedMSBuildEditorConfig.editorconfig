@@ -45,31 +45,39 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJcC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIPComponents/AgentInfoDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJUENvbXBvbmVudHNcQWdlbnRJbmZvRGlhbG9nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIPComponents/Grid.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJUENvbXBvbmVudHNcR3JpZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIPComponents/MyMudDrawer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJUENvbXBvbmVudHNcTXlNdWREcmF3ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIPComponents/Table.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJUENvbXBvbmVudHNcVGFibGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIpModelPages/Create.razor]
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/MachineDetailInfoPages/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJcE1vZGVsUGFnZXNcQ3JlYXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIpModelPages/Delete.razor]
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/MachineDetailInfoPages/Delete.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJcE1vZGVsUGFnZXNcRGVsZXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIpModelPages/Details.razor]
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/MachineDetailInfoPages/Details.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJcE1vZGVsUGFnZXNcRGV0YWlscy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIpModelPages/Edit.razor]
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/MachineDetailInfoPages/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJcE1vZGVsUGFnZXNcRWRpdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/BidIpModelPages/Index.razor]
+[C:/Users/Administrator/source/repos/BidIP/BidIP/Components/Pages/MachineDetailInfoPages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCaWRJcE1vZGVsUGFnZXNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8siOuBIQlC8xrUABOgIEejIqQsGKTKVo2gmaQU7vyY8=",
+  "Hash": "8FggJftgU+RVaXzbIK/xil27Srbe9pgF0qggSgCypPA=",
   "Source": "BidIP",
   "BasePath": "_content/BidIP",
   "Mode": "Default",
@@ -1288,6 +1288,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\Administrator\\source\\repos\\BidIP\\BidIP\\wwwroot\\js\\browserInfo.js",
+      "SourceId": "BidIP",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Administrator\\source\\repos\\BidIP\\BidIP\\wwwroot\\",
+      "BasePath": "_content/BidIP",
+      "RelativePath": "js/browserInfo.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\browserInfo.js"
     }
   ]
 }

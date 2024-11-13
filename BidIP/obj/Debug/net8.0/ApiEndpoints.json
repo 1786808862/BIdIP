@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "BidIP.Controllers.AgentController",
+    "Method": "SetStatus",
+    "RelativePath": "Agent/setStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "machineDetailInfo",
+        "Type": "BidIP.Models.MachineDetailInfo",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BidIP.Controllers.AgentController",
     "Method": "GetStatus",
     "RelativePath": "Agent/status",
     "HttpMethod": "GET",
@@ -35,7 +51,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[BidIP.Models.BidIpModel, BidIP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[BidIP.Models.MachineDetailInfo, BidIP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

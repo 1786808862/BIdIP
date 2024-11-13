@@ -272,3 +272,8 @@ C:\Users\Administrator\source\repos\BidIP\BidIP\obj\Debug\net8.0\refint\BidIP.dl
 C:\Users\Administrator\source\repos\BidIP\BidIP\obj\Debug\net8.0\BidIP.pdb
 C:\Users\Administrator\source\repos\BidIP\BidIP\obj\Debug\net8.0\BidIP.genruntimeconfig.cache
 C:\Users\Administrator\source\repos\BidIP\BidIP\obj\Debug\net8.0\ref\BidIP.dll
+C:\Users\Administrator\source\repos\BidIP\BidIP\obj\Debug\net8.0\BidIP.sourcelink.json
+C:\Users\Administrator\source\repos\BidIP\BidIP\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\Administrator\source\repos\BidIP\BidIP\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Administrator\source\repos\BidIP\BidIP\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Administrator\source\repos\BidIP\BidIP\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

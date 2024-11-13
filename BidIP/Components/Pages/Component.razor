@@ -1,0 +1,22 @@
+﻿@page "/test"
+
+@code {
+    [CascadingParameter]
+    public bool isLoading { get; set; }
+
+    [CascadingParameter]
+    public EventCallback<bool> isLoadingChanged { get; set; }
+
+    private async Task ToggleLoadingState()
+    {
+        // 触发回调来更新祖父组件的状态
+        await isLoadingChanged.InvokeAsync(!isLoading);
+    }
+}
+
+<h3>Grandchild Component</h3>
+
+<p>Loading state in grandchild: @isLoading</p>
+
+<!-- 触发回调来更新祖父组件的状态 -->
+<button @onclick="ToggleLoadingState">Toggle Loading</button>

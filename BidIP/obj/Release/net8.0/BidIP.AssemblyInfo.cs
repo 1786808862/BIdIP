@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BidIP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1a4170bc02ebfe3b9b63f68f1021a00609a8b63f")]
 [assembly: System.Reflection.AssemblyProductAttribute("BidIP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BidIP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

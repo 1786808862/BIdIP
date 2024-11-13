@@ -8,8 +8,9 @@
 
 <MudTable Items="@agentInfo" Hover="true" AllowUnsorted="false" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<MachineDetailInfo, object>(x=>x.MachineCategory.Name)">Group</MudTableSortLabel></MudTh>
         <MudTh>
-            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<BidIpModel, object>(x=>{
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<MachineDetailInfo, object>(x=>{
                               // 提取字母部分
                               string letters = new string(x.Name.TakeWhile(char.IsLetter).ToArray());
                               // 提取数字部分
@@ -18,22 +19,23 @@
                               return (letters, int.Parse(numbers));
                           })">Name</MudTableSortLabel>
         </MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.IpAddress)">Ip Address</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.LastTime)">LastTime(s)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.LastSSYTime)">LastSSYTime(s)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<BidIpModel, object>(x=>x.SsyCount)">SsyCount</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MachineDetailInfo, object>(x=>x.IpAddress)">Ip Address</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MachineDetailInfo, object>(x=>x.LastTime)">LastTime(s)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MachineDetailInfo, object>(x=>x.LastSSYTime)">LastSSYTime(s)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MachineDetailInfo, object>(x=>x.SsyCount)">SsyCount</MudTableSortLabel></MudTh>
         <MudTh>操作</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd DataLabel="Group">@context.MachineCategory.Name</MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Ip Address">@context.IpAddress</MudTd>
-        <MudTd DataLabel="LastTime"><span style="@(((int)(DateTime.Now - context.LastTime).TotalSeconds) > 15 ? "color: red;" : "color : green;")">@((int)(DateTime.Now - context.LastTime).TotalSeconds)</span></MudTd>
-        <MudTd DataLabel="LastSSYTime"><span style="@(((int)(DateTime.Now - context.LastSSYTime).TotalSeconds) > 15 ? "color: red;" : "color : green;")">@((int)(DateTime.Now - context.LastSSYTime).TotalSeconds)</span></MudTd>
+        <MudTd DataLabel="LastTime"><span style="@(((int)(DateTime.Now - context.LastTime).TotalSeconds) > 15 || context.LastTime < DateTime.Now.AddYears(-2)  ? "color: red;" : "color : green;")">@(context.LastTime > DateTime.Now.AddYears(-2) ? ((int)(DateTime.Now - context.LastTime).TotalSeconds) : 9999)</span></MudTd>
+        <MudTd DataLabel="LastSSYTime"><span style="@(((int)(DateTime.Now - context.LastSSYTime).TotalSeconds) > 15 || context.LastSSYTime < DateTime.Now.AddYears(-2)  ? "color: red;" : "color : green;")">@(context.LastSSYTime > DateTime.Now.AddYears(-2) ? ((int)(DateTime.Now - context.LastSSYTime).TotalSeconds) : 9999)</span></MudTd>
         <MudTd DataLabel="SsyCount">@context.SsyCount</MudTd>
         <MudTd DataLabel="Edit">
             <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
-                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="() => showDetail(context.Id)" />
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => editAgentInfo(context.Id)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="() => showDetail(context.Id)" Style="margin-right:3px" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => editAgentInfo(context.Id)" Style="margin-right:3px" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="() => deleteAgent(context.Id)" />
             </MudButtonGroup>
         </MudTd>
@@ -42,44 +44,49 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-<MyMudDrawer @ref="myTableDrawer" myDictionary="myDictionary" type="edit" bidIpModel="bidIpModel1" />
+<MyMudDrawer @ref="myTableDrawer" myDictionary="myDictionary" type="edit" machineDetailInfo="machineDetailInfo1" />
 
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.KeyboardArrowUp" />
+</MudScrollToTop>
 
 @code {
     private MyMudDrawer myTableDrawer;
     private bool _loading;
     private bool _open = false;
     private string _type = "edit";
-    private BidIpModel bidIpModel1 = new BidIpModel();
+    private MachineDetailInfo machineDetailInfo1 = new MachineDetailInfo();
     private Dictionary<string, Boolean> myDictionary = new Dictionary<string, Boolean>()
     {
         {"_open",false}
     };
     [Parameter]
-    public IEnumerable<BidIpModel> agentInfo { get; set; }
+    public IEnumerable<MachineDetailInfo> agentInfo { get; set; }
 
     private async void showDetail(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        var bidIpModel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == id);
-        var parameters = new DialogParameters<AgentInfoDialog> { { x => x.bidIpModel, bidIpModel } };
+        var machineDetailInfo = await context.MachineDetailInfo.FirstOrDefaultAsync(m => m.Id == id);
+        var parameters = new DialogParameters<AgentInfoDialog> { { x => x.machineDetailInfo, machineDetailInfo } };
         var dialog = await DialogService.ShowAsync<AgentInfoDialog>("Show Detail", parameters);
     }
 
     private void editAgentInfo(int id)
     {
         myDictionary["_open"] = true;
-        bidIpModel1 = agentInfo.FirstOrDefault(agent => agent.Id == id);
-        myTableDrawer.SetDrawerValue(bidIpModel1);
+        machineDetailInfo1 = agentInfo.FirstOrDefault(agent => agent.Id == id);
+        myTableDrawer.SetDrawerValue(machineDetailInfo1);
     }
 
     private async void deleteAgent(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        var bidipmodel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == id);
-        context.BidIpModel.Remove(bidipmodel!);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/bidip");
+        var machinedetailinfo = await context.MachineDetailInfo.FirstOrDefaultAsync(m => m.Id == id);
+        if (machinedetailinfo != null)
+        {
+            context.MachineDetailInfo.Remove(machinedetailinfo!);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/bidip", forceLoad: true);
+        }
     }
-
 }

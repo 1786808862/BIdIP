@@ -2,14 +2,14 @@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h4" Style="text-align: center">
-            @bidIpModel.Name
+            @machineDetailInfo.Name
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField Value="@bidIpModel.Name" Label="Name" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
-        <MudTextField Value="@bidIpModel.IpAddress" Label="IpAddress" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
-        <MudTextField Value="@(((int)(DateTime.Now - bidIpModel.LastTime).TotalSeconds) + "s前" + "  " + bidIpModel.LastTime)" Label="LastTime" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
-        <MudTextField Value="@(((int)(DateTime.Now - bidIpModel.LastSSYTime).TotalSeconds) + "s前" + "  " + bidIpModel.LastSSYTime)" Label="LastSSYTime" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@machineDetailInfo.Name" Label="Name" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@machineDetailInfo.IpAddress" Label="IpAddress" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@(((int)(DateTime.Now - machineDetailInfo.LastTime).TotalSeconds) + "s前" + "  " + machineDetailInfo.LastTime)" Label="LastTime" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
+        <MudTextField Value="@(((int)(DateTime.Now - machineDetailInfo.LastSSYTime).TotalSeconds) + "s前" + "  " + machineDetailInfo.LastSSYTime)" Label="LastSSYTime" ReadOnly="true" Style="width:500px;margin-bottom:20px" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Close</MudButton>
@@ -20,7 +20,7 @@
     private MudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public BidIpModel bidIpModel { get; set; } = new BidIpModel();
+    public MachineDetailInfo machineDetailInfo { get; set; } = new MachineDetailInfo();
 
     private void Cancel() => MudDialog.Cancel();
 }

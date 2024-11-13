@@ -1,6 +1,34 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
+﻿@using BidIP.Components.Pages.Utils
+<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    <CascadingValue Value="isLoading">
+        <CascadingValue Value="EventCallback.Factory.Create<bool>(this, OnLoadingChanged)">
+            <GlobalLoading IsVisible="@isLoading" IsVisibleChanged="OnLoadingChanged" />
+        @if (routeData.PageType == typeof(Pages.Login))
+        {
+            <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.LoginLayout)" />
+        }
+        else
+        {
+            <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+                }
+            </CascadingValue>
+        </CascadingValue>
     </Found>
 </Router>
+
+@code {
+
+
+    private bool isLoading = false;
+
+
+    private void OnLoadingChanged(bool value)
+
+
+    {
+        isLoading = value;
+
+    }
+}

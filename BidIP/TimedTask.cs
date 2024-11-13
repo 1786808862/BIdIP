@@ -30,7 +30,7 @@ public class TimedTask
     //        // 如果缓存不存在，则从数据库获取数据
     //        using (var context = _dbFactory.CreateDbContext())
     //        {
-    //            names = await context.BidIpModel.Select(b => b.Name).ToListAsync();
+    //            names = await context.MachineDetailInfo.Select(b => b.Name).ToListAsync();
     //        }
 
     //        // 将数据存入缓存
@@ -53,57 +53,61 @@ public class TimedTask
                     for (int i = 0; i < 20; i++)
                     {
                         int randomNumber = random.Next(1, 141);
-                        var bidIpModel = new BidIpModel
+                        var machineDetailInfo = new MachineDetailInfo
                         {
                             Name = "JA" + randomNumber,
                             IpAddress = "192.168.0." + randomNumber,
                             LastTime = DateTime.Now.AddSeconds(-random.Next(1, 20)),
                             LastSSYTime = DateTime.Now.AddSeconds(-random.Next(1, 20)),
                             SsyCount = random.Next(1, 1111),
+                            MachineCategoryId = 1
                         };
-                        var existingModel = await context.BidIpModel.AsNoTracking()
-                                            .FirstOrDefaultAsync(b => b.Name == bidIpModel.Name);
+                        var existingModel = await context.MachineDetailInfo.AsNoTracking()
+                                            .FirstOrDefaultAsync(b => b.Name == machineDetailInfo.Name);
 
                         if (existingModel == null)
                         {
-                            //names.Add(bidIpModel.Name);
-                            context.BidIpModel.Add(bidIpModel);
+                            //names.Add(machineDetailInfo.Name);
+                            context.MachineDetailInfo.Add(machineDetailInfo);
                         }
                         else
                         {
-                            existingModel.IpAddress = bidIpModel.IpAddress;
-                            existingModel.LastTime = bidIpModel.LastTime;
-                            existingModel.LastSSYTime = bidIpModel.LastSSYTime;
-                            existingModel.SsyCount = bidIpModel.SsyCount;
-                            context.BidIpModel.Update(existingModel);
+                            existingModel.IpAddress = machineDetailInfo.IpAddress;
+                            existingModel.LastTime = machineDetailInfo.LastTime;
+                            existingModel.LastSSYTime = machineDetailInfo.LastSSYTime;
+                            existingModel.SsyCount = machineDetailInfo.SsyCount;
+                            existingModel.MachineCategoryId = machineDetailInfo.MachineCategoryId;
+                            context.MachineDetailInfo.Update(existingModel);
                         }
                         // 提交所有变更
                         await context.SaveChangesAsync();
                         context.ChangeTracker.Clear();  // 清除所有跟踪的实体
 
                         randomNumber = random.Next(141, 281);
-                        bidIpModel = new BidIpModel
+                        machineDetailInfo = new MachineDetailInfo
                         {
                             Name = "JD" + (randomNumber - 140),
                             IpAddress = "192.168.1." + (randomNumber - 140),
                             LastTime = DateTime.Now.AddSeconds(-random.Next(1, 20)),
                             LastSSYTime = DateTime.Now.AddSeconds(-random.Next(1, 20)),
                             SsyCount = random.Next(1, 1111),
+                            MachineCategoryId = 1
                         };
-                        existingModel = await context.BidIpModel.AsNoTracking()
-                                            .FirstOrDefaultAsync(b => b.Name == bidIpModel.Name);
+                        existingModel = await context.MachineDetailInfo.AsNoTracking()
+                                            .FirstOrDefaultAsync(b => b.Name == machineDetailInfo.Name);
                         if (existingModel == null)
                         {
-                            //names.Add(bidIpModel.Name);
-                            context.BidIpModel.Add(bidIpModel);
+                            //names.Add(machineDetailInfo.Name);
+                            context.MachineDetailInfo.Add(machineDetailInfo);
                         }
                         else
                         {
-                            existingModel.IpAddress = bidIpModel.IpAddress;
-                            existingModel.LastTime = bidIpModel.LastTime;
-                            existingModel.LastSSYTime = bidIpModel.LastSSYTime;
-                            existingModel.SsyCount = bidIpModel.SsyCount;
-                            context.BidIpModel.Update(existingModel);
+                            existingModel.IpAddress = machineDetailInfo.IpAddress;
+                            existingModel.LastTime = machineDetailInfo.LastTime;
+                            existingModel.LastSSYTime = machineDetailInfo.LastSSYTime;
+                            existingModel.SsyCount = machineDetailInfo.SsyCount;
+                            existingModel.MachineCategoryId = machineDetailInfo.MachineCategoryId;
+                            context.MachineDetailInfo.Update(existingModel);
                         }
                         // 提交所有变更
                         await context.SaveChangesAsync();

@@ -1,0 +1,83 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<MudDialog>
+    <TitleContent>
+        @TitleText
+    </TitleContent>
+    <DialogContent>
+        @ContentText
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="addGroupWithMachine">Yes</MudButton>
+        <MudButton OnClick="Cancel">No</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string TitleText { get; set; }
+
+    [Parameter]
+    public string ContentText { get; set; }
+
+    [Parameter]
+    public string addGroupName { get; set; }
+    [CascadingParameter] public bool isLoading { get; set; }
+    [CascadingParameter] public EventCallback<bool> isLoadingChanged { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task<Boolean> addGroup()
+    {
+        var context = DbFactory.CreateDbContext();
+        MachineCategory machineCategory = new MachineCategory();
+        machineCategory.Name = addGroupName;
+        var addMachineCategory = await context.MachineCategory.FirstOrDefaultAsync(m => m.Name == addGroupName);
+        if (addMachineCategory ==null )
+        {
+            await context.MachineCategory.AddAsync(machineCategory);
+            int result = await context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private async Task addGroupWithMachine()
+    {
+        MudDialog.Cancel();
+        await isLoadingChanged.InvokeAsync(true);
+        Boolean result = await addGroup();
+        if (result)
+        {
+            var context = DbFactory.CreateDbContext();
+            var machineCategory = await context.MachineCategory.FirstOrDefaultAsync(m => m.Name == addGroupName);
+            int id = machineCategory.Id;
+            List<MachineDetailInfo> machineDetailInfos = context.MachineDetailInfo.Where(m => m.Name.StartsWith(addGroupName)).ToList();
+            if (machineDetailInfos != null)
+            {
+                foreach (var machineDetailInfo in machineDetailInfos)
+                {
+                    machineDetailInfo.MachineCategoryId = id;
+                    // 批量更新所有记录
+                    DbFactory.CreateDbContext().Attach(machineDetailInfo!).State = EntityState.Modified;
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        await isLoadingChanged.InvokeAsync(false);
+        NavigationManager.NavigateTo("/bidip");
+    }
+}

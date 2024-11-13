@@ -22,7 +22,45 @@ namespace BidIP.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BidIP.Models.BidIpModel", b =>
+            modelBuilder.Entity("BidIP.Models.CustomerInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomerInfo");
+                });
+
+            modelBuilder.Entity("BidIP.Models.MachineCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MachineCategory");
+                });
+
+            modelBuilder.Entity("BidIP.Models.MachineDetailInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,7 +69,6 @@ namespace BidIP.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("IpAddress")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastSSYTime")
@@ -39,6 +76,9 @@ namespace BidIP.Migrations
 
                     b.Property<DateTime>("LastTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("MachineCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -49,7 +89,25 @@ namespace BidIP.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BidIpModel");
+                    b.HasIndex("MachineCategoryId");
+
+                    b.ToTable("MachineDetailInfo");
+                });
+
+            modelBuilder.Entity("BidIP.Models.MachineDetailInfo", b =>
+                {
+                    b.HasOne("BidIP.Models.MachineCategory", "MachineCategory")
+                        .WithMany("MachineDetailInfo")
+                        .HasForeignKey("MachineCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MachineCategory");
+                });
+
+            modelBuilder.Entity("BidIP.Models.MachineCategory", b =>
+                {
+                    b.Navigation("MachineDetailInfo");
                 });
 #pragma warning restore 612, 618
         }

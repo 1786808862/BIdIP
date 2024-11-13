@@ -42,6 +42,9 @@
         </MudItem>
     }
 </MudGrid>
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.KeyboardArrowUp" />
+</MudScrollToTop>
 <style>
     .mud-input > input.mud-input-root-outlined, div.mud-input-slot.mud-input-root-outlined {
         padding-top: 5px;
@@ -56,7 +59,7 @@
     private string currentIcon = Icons.Material.Filled.ArrowUpward;  // 初始图标
 
     [Parameter]
-    public IEnumerable<BidIpModel> agentInfo { get; set; }
+    public IEnumerable<MachineDetailInfo> agentInfo { get; set; }
 
     private void sort ()
     {
@@ -71,7 +74,7 @@
         }
         sortAgentInfo(_value, _sortBy);
     }
-    public IEnumerable<BidIpModel> sortAgentInfo(string s, Boolean sortBy)
+    public IEnumerable<MachineDetailInfo> sortAgentInfo(string s, Boolean sortBy)
     {
         _value = s;
         switch (s)

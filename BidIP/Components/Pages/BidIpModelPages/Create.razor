@@ -1,4 +1,4 @@
-﻿@page "/bidipmodels/create"
+﻿@page "/machinedetailinfos/create"
 @using Microsoft.EntityFrameworkCore
 @using BidIP.Models
 @inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
@@ -8,37 +8,37 @@
 
 <h1>Create</h1>
 
-<h2>BidIpModel</h2>
+<h2>MachineDetailInfo</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="BidIpModel" OnValidSubmit="AddBidIpModel" FormName="create" Enhance>
+        <EditForm method="post" Model="MachineDetailInfo" OnValidSubmit="AddMachineDetailInfo" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label> 
-                <InputText id="name" @bind-Value="BidIpModel.Name" class="form-control" /> 
-                <ValidationMessage For="() => BidIpModel.Name" class="text-danger" /> 
+                <InputText id="name" @bind-Value="MachineDetailInfo.Name" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.Name" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="ipaddress" class="form-label">IpAddress:</label> 
-                <InputText id="ipaddress" @bind-Value="BidIpModel.IpAddress" class="form-control" /> 
-                <ValidationMessage For="() => BidIpModel.IpAddress" class="text-danger" /> 
+                <InputText id="ipaddress" @bind-Value="MachineDetailInfo.IpAddress" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.IpAddress" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="lasttime" class="form-label">LastTime:</label> 
-                <InputDate id="lasttime" @bind-Value="BidIpModel.LastTime" class="form-control" /> 
-                <ValidationMessage For="() => BidIpModel.LastTime" class="text-danger" /> 
+                <InputDate id="lasttime" @bind-Value="MachineDetailInfo.LastTime" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.LastTime" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="lastssytime" class="form-label">LastSSYTime:</label> 
-                <InputDate id="lastssytime" @bind-Value="BidIpModel.LastSSYTime" class="form-control" /> 
-                <ValidationMessage For="() => BidIpModel.LastSSYTime" class="text-danger" /> 
+                <InputDate id="lastssytime" @bind-Value="MachineDetailInfo.LastSSYTime" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.LastSSYTime" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="ssycount" class="form-label">SsyCount:</label> 
-                <InputNumber id="ssycount" @bind-Value="BidIpModel.SsyCount" class="form-control" /> 
-                <ValidationMessage For="() => BidIpModel.SsyCount" class="text-danger" /> 
+                <InputNumber id="ssycount" @bind-Value="MachineDetailInfo.SsyCount" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.SsyCount" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
@@ -46,19 +46,19 @@
 </div>
 
 <div>
-    <a href="/bidipmodels">Back to List</a>
+    <a href="/machinedetailinfos">Back to List</a>
 </div>
 
 @code {
     [SupplyParameterFromForm]
-    private BidIpModel BidIpModel { get; set; } = new();
+    private MachineDetailInfo MachineDetailInfo { get; set; } = new();
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task AddBidIpModel()
+    private async Task AddMachineDetailInfo()
     {
         using var context = DbFactory.CreateDbContext();
-        context.BidIpModel.Add(BidIpModel);
+        context.MachineDetailInfo.Add(MachineDetailInfo);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/bidipmodels");
+        NavigationManager.NavigateTo("/machinedetailinfos");
     }
 }

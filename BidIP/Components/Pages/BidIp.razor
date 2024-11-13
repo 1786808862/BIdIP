@@ -2,20 +2,18 @@
 @using BidIP.Models
 @using BidIP.Components.Pages.BidIPComponents
 @using System.Linq;
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
 @inject HttpClient Http
-
+@inject IDialogService DialogService
+    
 <MyMudDrawer AgentInfoDictionaryChange="HandleSubmit" myDictionary="myDictionary" type="search" />
 
 <MudCard Style="margin-top: 25px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
     <MudCardContent>
         <MudGrid Justify="Justify.SpaceBetween" Style="margin-bottom: 30px">
-            <MudItem xs="6" sm="6" md="5" lg="4" xl="4">
+            <MudItem xs="4" sm="4" md="3" lg="3" xl="5">
                 <MudButton Variant="Variant.Filled" OnClick="searchDrawer" Style="margin-right:50px">Search</MudButton>
-                <MudButtonGroup Color="Color.Tertiary" Size="Size.Small" Variant="Variant.Filled">
-                    <MudButton OnClick="() => SearchName(null)">All</MudButton>
-                    <MudButton OnClick="() => SearchName(JA)">JA</MudButton>
-                    <MudButton OnClick="() => SearchName(JD)">JD</MudButton>
-                </MudButtonGroup>
             </MudItem>
             <MudItem xs="3" sm="3" md="2" lg="1" xl="1">
                 <MudToggleGroup T="string" @bind-Value="type">
@@ -28,12 +26,54 @@
                 </MudToggleGroup>
             </MudItem>
         </MudGrid>
+        <MudGrid Justify="Justify.FlexStart" Style="margin-bottom: 30px">
+            <MudItem xs="6" sm="6" md="2" lg="2" xl="2" Style="
+                display: flex;
+                align-items: center;">
+                <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                    <MudButton>@_selectMachineCategories</MudButton>
+                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
+                        <MudMenuItem OnClick="() =>SearchName(All)">All</MudMenuItem>
+                        @if (machineCategories != null)
+                        {
+                            @foreach (var machineCategory in machineCategories)
+                            {
+                                <MudMenuItem OnClick="() =>SearchName(machineCategory.Name)">@machineCategory.Name</MudMenuItem>
+                            }
+                        }
+                    </MudMenu>
+                </MudButtonGroup>
+            </MudItem>
+            <MudItem xs="6" sm="6" md="2" lg="2" xl="2" Style="margin-bottom:5px">
+                <div class="input-button-group">
+                    <MudTextField @bind-Value="AddGroupValue" Label="Group Name" Variant="Variant.Text" Class="input-field" RequiredError="Group name is required!" />
+                    <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="AddGroup" Class="submit-button">Add Group</MudButton>
+                </div>
+            </MudItem>
+        </MudGrid>
         <DynamicComponent Type="@(type.Equals("Table") ? typeof(Table) : typeof(Grid))" Parameters="@agentInfoDictionary"></DynamicComponent>
     </MudCardContent>
 </MudCard>
+
+
+<style>
+    .input-button-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .input-field {
+        flex-grow: 1;
+    }
+
+    .submit-button {
+        flex-shrink: 0;
+    }
+</style>
+
 @code {
     private bool _open;
-    BidIpModel bidIpModel = new BidIpModel(1, "", "", DateTime.Now, DateTime.Now, 1);
+    MachineDetailInfo machineDetailInfo = new MachineDetailInfo(1, "", "", DateTime.Now, DateTime.Now, 1);
     private MudForm form;
     private string name;
     private string ipAddress;
@@ -45,6 +85,9 @@
     private int[] ssyCountArr = { 500, 1000, 1500, 2000, 3000 };
     private string responseMessage;
     private int totalItems;
+    private string? _selectMachineCategories = "All";
+    private string? AddGroupValue;
+    private string All = "All";
     private Dictionary<string, object> agentInfoDictionary = new Dictionary<string, object>();
     private Dictionary<string, Boolean> myDictionary = new Dictionary<string, Boolean>()
     {
@@ -52,22 +95,33 @@
     };
     private string type = "Table";
 
-    private string JA = "JA";
-    private string JD = "JD";
+    private IEnumerable<MachineCategory> machineCategories;
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<BidIpModel> bidIpModels = await Http.GetFromJsonAsync<List<BidIpModel>>("agent/status") ?? [];
-        agentInfoDictionary["agentInfo"] = bidIpModels.OrderBy(m => m.Id).ToList();
+        IEnumerable<MachineDetailInfo> machineDetailInfos = await Http.GetFromJsonAsync<List<MachineDetailInfo>>("agent/status") ?? [];
+        agentInfoDictionary["agentInfo"] = machineDetailInfos.OrderBy(m => m.Id).ToList();
+        var context = DbFactory.CreateDbContext();
+        machineCategories = context.MachineCategory.OrderBy(m => m.Id == 1 ? 1 : 0) // 特定记录排在最后
+                              .ThenBy(m => m.Name);
     }
 
-    private async Task SearchName(string name)
+    private async Task SearchName(string MachineCategoryName)
     {
+        _selectMachineCategories = MachineCategoryName;
         try
         {
 
-            // 将数据作为 JSON 发送
-            var response = await Http.GetFromJsonAsync<List<BidIpModel>>($"agent/status?Name={name}") ?? [];
+            var context = DbFactory.CreateDbContext();
+            IEnumerable<MachineDetailInfo>? response = null;
+            if (!MachineCategoryName.Equals("All"))
+            {
+                var machineCategory = await context.MachineCategory.FirstOrDefaultAsync(m => m.Name == MachineCategoryName);
+                response = await context.MachineDetailInfo.Where(m => m.MachineCategoryId == machineCategory.Id).ToListAsync();
+            } else
+            {
+                response = context.MachineDetailInfo;
+            }
             if (response != null)
             {
                 agentInfoDictionary["agentInfo"] = response.OrderBy(m => m.Id).ToList();
@@ -84,13 +138,33 @@
         }
     }
 
-    private void HandleSubmit(List<BidIpModel> bidIpModels)
+    private void HandleSubmit(List<MachineDetailInfo> machineDetailInfos)
     {
-        agentInfoDictionary["agentInfo"] = bidIpModels;
+        agentInfoDictionary["agentInfo"] = machineDetailInfos;
     }
 
     private void searchDrawer ()
     {
         myDictionary["_open"] = true;
     }
+
+    private async Task AddGroup()
+    {
+        if (AddGroupValue != null)
+        {
+
+            var options = new DialogOptions { CloseOnEscapeKey = true };
+            var parameters = new DialogParameters<AddGroupMudDialog>
+            {
+                { x => x.TitleText, "Add Group" },
+                { x => x.ContentText, $"Are you sure to create Group {AddGroupValue} and move all devices with prefix name {AddGroupValue} to Group {AddGroupValue}?" },
+                { x => x.addGroupName, AddGroupValue }
+            };
+            await DialogService.ShowAsync<AddGroupMudDialog>("Add Group Dialog",parameters, options);
+        } else
+        {
+            
+        }
+    }
+
 }

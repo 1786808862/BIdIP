@@ -1,0 +1,19 @@
+﻿@using MudBlazor
+
+<MudOverlay @bind-Visible="IsVisible" DarkBackground Style="z-index:9999">
+    <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
+</MudOverlay>
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    private async Task OnLoadingChanged(bool value)
+    {
+        IsVisible = value;
+        await IsVisibleChanged.InvokeAsync(value);
+    }
+}

@@ -5,7 +5,7 @@
     width: 100%;
     height: 150px;
     border-radius: 14px;
-    z-index: 1111;
+    z-index: 99;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -72,6 +72,19 @@
     }
 }
 
+.input-button-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-field {
+    flex-grow: 1;
+    margin-right: 8px;
+}
+
+.submit-button {
+    flex-shrink: 0;
+}
 
 /* 容器样式 */
 h5.mechineName {

@@ -1,4 +1,4 @@
-﻿@page "/bidipmodels/details"
+﻿@page "/machinedetailinfos/details"
 @using Microsoft.EntityFrameworkCore
 @using BidIP.Models
 @inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
@@ -9,34 +9,34 @@
 <h1>Details</h1>
 
 <div>
-    <h2>BidIpModel</h2>
+    <h2>MachineDetailInfo</h2>
     <hr />
-    @if (bidipmodel is null)
+    @if (machinedetailinfo is null)
     {
         <p><em>Loading...</em></p>
     }
     else {
         <dl class="row">
             <dt class="col-sm-2">Name</dt>
-            <dd class="col-sm-10">@bidipmodel.Name</dd>
+            <dd class="col-sm-10">@machinedetailinfo.Name</dd>
             <dt class="col-sm-2">IpAddress</dt>
-            <dd class="col-sm-10">@bidipmodel.IpAddress</dd>
+            <dd class="col-sm-10">@machinedetailinfo.IpAddress</dd>
             <dt class="col-sm-2">LastTime</dt>
-            <dd class="col-sm-10">@bidipmodel.LastTime</dd>
+            <dd class="col-sm-10">@machinedetailinfo.LastTime</dd>
             <dt class="col-sm-2">LastSSYTime</dt>
-            <dd class="col-sm-10">@bidipmodel.LastSSYTime</dd>
+            <dd class="col-sm-10">@machinedetailinfo.LastSSYTime</dd>
             <dt class="col-sm-2">SsyCount</dt>
-            <dd class="col-sm-10">@bidipmodel.SsyCount</dd>
+            <dd class="col-sm-10">@machinedetailinfo.SsyCount</dd>
         </dl>
         <div>
-            <a href="@($"/bidipmodels/edit?id={bidipmodel.Id}")">Edit</a> |
-            <a href="@($"/bidipmodels")">Back to List</a>
+            <a href="@($"/machinedetailinfos/edit?id={machinedetailinfo.Id}")">Edit</a> |
+            <a href="@($"/machinedetailinfos")">Back to List</a>
         </div>
     }
 </div>
 
 @code {
-    private BidIpModel? bidipmodel;
+    private MachineDetailInfo? machinedetailinfo;
 
     [SupplyParameterFromQuery]
     private int Id { get; set; }
@@ -44,9 +44,9 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        bidipmodel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == Id);
+        machinedetailinfo = await context.MachineDetailInfo.FirstOrDefaultAsync(m => m.Id == Id);
 
-        if (bidipmodel is null)
+        if (machinedetailinfo is null)
         {
             NavigationManager.NavigateTo("notfound");
         }

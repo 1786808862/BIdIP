@@ -1,4 +1,4 @@
-﻿@page "/bidipmodels/edit"
+﻿@page "/machinedetailinfos/edit"
 @using Microsoft.EntityFrameworkCore
 @using BidIP.Models
 @inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
@@ -8,9 +8,9 @@
 
 <h1>Edit</h1>
 
-<h2>BidIpModel</h2>
+<h2>MachineDetailInfo</h2>
 <hr />
-@if (BidIpModel is null)
+@if (MachineDetailInfo is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -18,34 +18,34 @@ else
 {
     <div class="row">
         <div class="col-md-4">
-            <EditForm method="post" Model="BidIpModel" OnValidSubmit="UpdateBidIpModel" FormName="edit" Enhance>
+            <EditForm method="post" Model="MachineDetailInfo" OnValidSubmit="UpdateMachineDetailInfo" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <input type="hidden" name="BidIpModel.Id" value="@BidIpModel.Id" />
+                <input type="hidden" name="MachineDetailInfo.Id" value="@MachineDetailInfo.Id" />
                 <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="BidIpModel.Name" class="form-control" />
-                    <ValidationMessage For="() => BidIpModel.Name" class="text-danger" />
+                    <InputText id="name" @bind-Value="MachineDetailInfo.Name" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.Name" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="ipaddress" class="form-label">IpAddress:</label>
-                    <InputText id="ipaddress" @bind-Value="BidIpModel.IpAddress" class="form-control" />
-                    <ValidationMessage For="() => BidIpModel.IpAddress" class="text-danger" />
+                    <InputText id="ipaddress" @bind-Value="MachineDetailInfo.IpAddress" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.IpAddress" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="lasttime" class="form-label">LastTime:</label>
-                    <InputDate id="lasttime" @bind-Value="BidIpModel.LastTime" class="form-control" />
-                    <ValidationMessage For="() => BidIpModel.LastTime" class="text-danger" />
+                    <InputDate id="lasttime" @bind-Value="MachineDetailInfo.LastTime" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.LastTime" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="lastssytime" class="form-label">LastSSYTime:</label>
-                    <InputDate id="lastssytime" @bind-Value="BidIpModel.LastSSYTime" class="form-control" />
-                    <ValidationMessage For="() => BidIpModel.LastSSYTime" class="text-danger" />
+                    <InputDate id="lastssytime" @bind-Value="MachineDetailInfo.LastSSYTime" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.LastSSYTime" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="ssycount" class="form-label">SsyCount:</label>
-                    <InputNumber id="ssycount" @bind-Value="BidIpModel.SsyCount" class="form-control" />
-                    <ValidationMessage For="() => BidIpModel.SsyCount" class="text-danger" />
+                    <InputNumber id="ssycount" @bind-Value="MachineDetailInfo.SsyCount" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.SsyCount" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
@@ -54,7 +54,7 @@ else
 }
 
 <div>
-    <a href="/bidipmodels">Back to List</a>
+    <a href="/machinedetailinfos">Back to List</a>
 </div>
 
 @code {
@@ -62,14 +62,14 @@ else
     private int Id { get; set; }
 
     [SupplyParameterFromForm]
-    private BidIpModel? BidIpModel { get; set; }
+    private MachineDetailInfo? MachineDetailInfo { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        BidIpModel ??= await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == Id);
+        MachineDetailInfo ??= await context.MachineDetailInfo.FirstOrDefaultAsync(m => m.Id == Id);
 
-        if (BidIpModel is null)
+        if (MachineDetailInfo is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
@@ -77,10 +77,10 @@ else
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task UpdateBidIpModel()
+    private async Task UpdateMachineDetailInfo()
     {
         using var context = DbFactory.CreateDbContext();
-        context.Attach(BidIpModel!).State = EntityState.Modified;
+        context.Attach(MachineDetailInfo!).State = EntityState.Modified;
 
         try
         {
@@ -88,7 +88,7 @@ else
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!BidIpModelExists(BidIpModel!.Id))
+            if (!MachineDetailInfoExists(MachineDetailInfo!.Id))
             {
                 NavigationManager.NavigateTo("notfound");
             }
@@ -98,12 +98,12 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/bidipmodels");
+        NavigationManager.NavigateTo("/machinedetailinfos");
     }
 
-    private bool BidIpModelExists(int id)
+    private bool MachineDetailInfoExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        return context.BidIpModel.Any(e => e.Id == id);
+        return context.MachineDetailInfo.Any(e => e.Id == id);
     }
 }

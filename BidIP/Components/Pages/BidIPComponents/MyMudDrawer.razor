@@ -3,6 +3,7 @@
 @using System.Linq;
 @using Microsoft.EntityFrameworkCore
 @using BidIP.Models
+@inject NavigationManager NavigationManager
 @inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
 @inject HttpClient Http
 
@@ -68,7 +69,7 @@
     private DateTime? _lastTimeDateTime = DateTime.Today;
     private TimeSpan? _lastSSYTimeSpan;
     private DateTime? _lastSSYTimeDateTime = DateTime.Today;
-    private BidIpModel existingModel = new BidIpModel();
+    private MachineDetailInfo existingModel = new MachineDetailInfo();
     [Parameter]
     public Boolean _open { get; set; } = false;
 
@@ -82,10 +83,10 @@
     public string type { get; set; }
 
     [Parameter]
-    public BidIpModel bidIpModel { get; set; }
+    public MachineDetailInfo machineDetailInfo { get; set; }
 
     [Parameter]
-    public EventCallback<List<BidIpModel>> AgentInfoDictionaryChange { get; set; }  // 用于触发父组件更新
+    public EventCallback<List<MachineDetailInfo>> AgentInfoDictionaryChange { get; set; }  // 用于触发父组件更新
 
     [Parameter]
     public EventCallback<Boolean> OnDataChanged { get; set; }
@@ -97,7 +98,7 @@
             try
             {
                 // 将数据作为 JSON 发送
-                var response = await Http.GetFromJsonAsync<List<BidIpModel>>($"agent/status?Name={name}&IpAddress={ipAddress}&LastTime={lastTimeSearch}&LastSSYTime={lastSSYTimeSearch}&SsyCount={ssyCount}") ?? [];
+                var response = await Http.GetFromJsonAsync<List<MachineDetailInfo>>($"agent/status?Name={name}&IpAddress={ipAddress}&LastTime={lastTimeSearch}&LastSSYTime={lastSSYTimeSearch}&SsyCount={ssyCount}") ?? [];
 
                 if (response != null)
                 {
@@ -124,7 +125,7 @@
             }
         } else
         {
-            existingModel.Id = bidIpModel.Id;
+            existingModel.Id = machineDetailInfo.Id;
             existingModel.Name = name;
             existingModel.IpAddress = ipAddress;
             existingModel.LastTime = _lastTimeDateTime.Value + _lastTimeSpan.Value;
@@ -134,17 +135,18 @@
             context.Attach(existingModel).State = EntityState.Modified;
             await context.SaveChangesAsync();
             myDictionary["_open"] = false;
+            NavigationManager.NavigateTo("/bidip", forceLoad: true);
         }
     }
-    public void SetDrawerValue(BidIpModel bidIpModel)
+    public void SetDrawerValue(MachineDetailInfo machineDetailInfo)
     {
-        name = bidIpModel.Name;
-        ipAddress = bidIpModel.IpAddress;
-        _lastTimeSpan = new TimeSpan(bidIpModel.LastTime.Hour, bidIpModel.LastTime.Minute, bidIpModel.LastTime.Second);
-        _lastTimeDateTime = bidIpModel.LastTime.AddDays(-1);
-        _lastSSYTimeSpan = new TimeSpan(bidIpModel.LastSSYTime.Hour, bidIpModel.LastSSYTime.Minute, bidIpModel.LastSSYTime.Second);
-        _lastSSYTimeDateTime = bidIpModel.LastSSYTime.AddDays(-1);
-        ssyCount = bidIpModel.SsyCount;
+        name = machineDetailInfo.Name;
+        ipAddress = machineDetailInfo.IpAddress;
+        _lastTimeSpan = new TimeSpan(machineDetailInfo.LastTime.Hour, machineDetailInfo.LastTime.Minute, machineDetailInfo.LastTime.Second);
+        _lastTimeDateTime = machineDetailInfo.LastTime.Date;
+        _lastSSYTimeSpan = new TimeSpan(machineDetailInfo.LastSSYTime.Hour, machineDetailInfo.LastSSYTime.Minute, machineDetailInfo.LastSSYTime.Second);
+        _lastSSYTimeDateTime = machineDetailInfo.LastSSYTime.Date;
+        ssyCount = machineDetailInfo.SsyCount;
     }
 
 }

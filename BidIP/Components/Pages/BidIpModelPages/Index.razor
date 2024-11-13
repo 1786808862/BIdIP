@@ -1,4 +1,4 @@
-﻿@page "/bidipmodels"
+﻿@page "/machinedetailinfos"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using BidIP.Models
@@ -11,7 +11,7 @@
 <h1>Index</h1>
 
 <p>
-    <a href="bidipmodels/create">Create New</a>
+    <a href="machinedetailinfos/create">Create New</a>
 </p>
 
 <MudTable Items="@tableInfo" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
@@ -29,21 +29,21 @@
         <MudTd DataLabel="LastSSYTime">@context.LastSSYTime</MudTd>
         <MudTd DataLabel="SsyCount">@context.SsyCount</MudTd>
         <MudTd>
-            <a href="@($"bidipmodels/edit?id={context.Id}")">Edit</a> |
-            <a href="@($"bidipmodels/details?id={context.Id}")">Details</a> |
-            <a href="@($"bidipmodels/delete?id={context.Id}")">Delete</a>
+            <a href="@($"machinedetailinfos/edit?id={context.Id}")">Edit</a> |
+            <a href="@($"machinedetailinfos/details?id={context.Id}")">Details</a> |
+            <a href="@($"machinedetailinfos/delete?id={context.Id}")">Delete</a>
         </MudTd>
     </RowTemplate>
 </MudTable>
 
 @code {
     private BidIPContext context = default!;
-    private IEnumerable<BidIpModel> tableInfo;
+    private IEnumerable<MachineDetailInfo> tableInfo;
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
-        tableInfo = context.BidIpModel;
+        tableInfo = context.MachineDetailInfo;
     }
 
 
