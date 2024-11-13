@@ -3,6 +3,7 @@
 @using System.Linq;
 @using Microsoft.EntityFrameworkCore
 @using BidIP.Models
+@inject NavigationManager NavigationManager
 @inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
 @inject HttpClient Http
 
@@ -134,6 +135,7 @@
             context.Attach(existingModel).State = EntityState.Modified;
             await context.SaveChangesAsync();
             myDictionary["_open"] = false;
+            NavigationManager.NavigateTo("/bidip", forceLoad: true);
         }
     }
     public void SetDrawerValue(BidIpModel bidIpModel)
@@ -141,9 +143,9 @@
         name = bidIpModel.Name;
         ipAddress = bidIpModel.IpAddress;
         _lastTimeSpan = new TimeSpan(bidIpModel.LastTime.Hour, bidIpModel.LastTime.Minute, bidIpModel.LastTime.Second);
-        _lastTimeDateTime = bidIpModel.LastTime.AddDays(-1);
+        _lastTimeDateTime = bidIpModel.LastTime.Date;
         _lastSSYTimeSpan = new TimeSpan(bidIpModel.LastSSYTime.Hour, bidIpModel.LastSSYTime.Minute, bidIpModel.LastSSYTime.Second);
-        _lastSSYTimeDateTime = bidIpModel.LastSSYTime.AddDays(-1);
+        _lastSSYTimeDateTime = bidIpModel.LastSSYTime.Date;
         ssyCount = bidIpModel.SsyCount;
     }
 

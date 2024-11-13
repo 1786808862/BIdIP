@@ -32,8 +32,8 @@
         <MudTd DataLabel="SsyCount">@context.SsyCount</MudTd>
         <MudTd DataLabel="Edit">
             <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
-                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="() => showDetail(context.Id)" />
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => editAgentInfo(context.Id)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="() => showDetail(context.Id)" Style="margin-right:3px" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => editAgentInfo(context.Id)" Style="margin-right:3px" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="() => deleteAgent(context.Id)" />
             </MudButtonGroup>
         </MudTd>
@@ -77,9 +77,11 @@
     {
         using var context = DbFactory.CreateDbContext();
         var bidipmodel = await context.BidIpModel.FirstOrDefaultAsync(m => m.Id == id);
-        context.BidIpModel.Remove(bidipmodel!);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/bidip");
+        if (bidipmodel != null)
+        {
+            context.BidIpModel.Remove(bidipmodel!);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/bidip", forceLoad: true);
+        }
     }
-
 }
