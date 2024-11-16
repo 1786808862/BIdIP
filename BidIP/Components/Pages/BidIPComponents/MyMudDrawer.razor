@@ -143,9 +143,9 @@
         name = machineDetailInfo.Name;
         ipAddress = machineDetailInfo.IpAddress;
         _lastTimeSpan = new TimeSpan(machineDetailInfo.LastTime.Hour, machineDetailInfo.LastTime.Minute, machineDetailInfo.LastTime.Second);
-        _lastTimeDateTime = machineDetailInfo.LastTime.Date;
+        _lastTimeDateTime = machineDetailInfo.LastTime.AddDays(-1);
         _lastSSYTimeSpan = new TimeSpan(machineDetailInfo.LastSSYTime.Hour, machineDetailInfo.LastSSYTime.Minute, machineDetailInfo.LastSSYTime.Second);
-        _lastSSYTimeDateTime = machineDetailInfo.LastSSYTime.Date;
+        _lastSSYTimeDateTime = machineDetailInfo.LastSSYTime.AddDays(-1);
         ssyCount = machineDetailInfo.SsyCount;
     }
 
