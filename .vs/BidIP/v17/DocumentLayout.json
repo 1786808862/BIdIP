@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|d:\\blazor\\bidip\\bidip-bidip_czy_20241116\\bidip\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|solutionrelative:bidip\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|d:\\blazor\\bidip\\bidip-bidip_czy_20241116\\bidip\\components\\pages\\admin actions\\groupmuddrawer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|solutionrelative:bidip\\components\\pages\\admin actions\\groupmuddrawer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|d:\\blazor\\bidip\\bidip-bidip_czy_20241116\\bidip\\components\\pages\\bidip.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|solutionrelative:bidip\\components\\pages\\bidip.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|d:\\blazor\\bidip\\bidip-bidip_czy_20241116\\bidip\\components\\pages\\admin actions\\groupmuddrawer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|solutionrelative:bidip\\components\\pages\\admin actions\\groupmuddrawer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C77E690E-18CB-4841-AFE5-BD346879FA7C}|BidIP\\BidIP.csproj|d:\\blazor\\bidip\\bidip-bidip_czy_20241116\\bidip\\components\\pages\\admin actions\\group.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -66,7 +62,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -75,10 +71,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Bookmark",
@@ -95,31 +87,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Layout\\NavMenu.razor",
-              "RelativeDocumentMoniker": "BidIP\\Components\\Layout\\NavMenu.razor",
-              "ToolTip": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Layout\\NavMenu.razor",
-              "RelativeToolTip": "BidIP\\Components\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvwsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T12:43:47.057Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "GroupMudDrawer.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\Admin Actions\\GroupMudDrawer.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\Admin Actions\\GroupMudDrawer.razor",
               "ToolTip": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\Admin Actions\\GroupMudDrawer.razor",
               "RelativeToolTip": "BidIP\\Components\\Pages\\Admin Actions\\GroupMudDrawer.razor",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAewFkAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T11:46:34.027Z"
+              "WhenOpened": "2024-11-16T11:46:34.027Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Group.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\Admin Actions\\Group.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\Admin Actions\\Group.razor",
@@ -131,7 +111,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Program.cs",
               "RelativeDocumentMoniker": "BidIP\\Program.cs",
@@ -143,7 +123,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
               "Title": "Edit.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\BidIpModelPages\\Edit.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\BidIpModelPages\\Edit.razor",
@@ -155,7 +135,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
               "Title": "Delete.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\BidIpModelPages\\Delete.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\BidIpModelPages\\Delete.razor",
@@ -167,7 +147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "AddGroupMudDialog.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\BidIPComponents\\AddGroupMudDialog.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\BidIPComponents\\AddGroupMudDialog.razor",
@@ -179,7 +159,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "Login.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\Login.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\Login.razor",
@@ -203,7 +183,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "MyMudDrawer.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\BidIPComponents\\MyMudDrawer.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\BidIPComponents\\MyMudDrawer.razor",
@@ -215,7 +195,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "MachineCategory.cs",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Models\\MachineCategory.cs",
               "RelativeDocumentMoniker": "BidIP\\Models\\MachineCategory.cs",
@@ -227,7 +207,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "Table.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\BidIPComponents\\Table.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\BidIPComponents\\Table.razor",
@@ -239,7 +219,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 12,
               "Title": "AgentController.cs",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Controllers\\AgentController.cs",
               "RelativeDocumentMoniker": "BidIP\\Controllers\\AgentController.cs",
@@ -251,7 +231,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 9,
               "Title": "Index.razor",
               "DocumentMoniker": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Pages\\BidIpModelPages\\Index.razor",
               "RelativeDocumentMoniker": "BidIP\\Components\\Pages\\BidIpModelPages\\Index.razor",
