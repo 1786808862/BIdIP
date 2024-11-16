@@ -555,3 +555,4 @@ D:\Blazor\BidIP\BIdIP-BidIP_CZY_20241116\BidIP\obj\Debug\net8.0\refint\BidIP.dll
 D:\Blazor\BidIP\BIdIP-BidIP_CZY_20241116\BidIP\obj\Debug\net8.0\BidIP.pdb
 D:\Blazor\BidIP\BIdIP-BidIP_CZY_20241116\BidIP\obj\Debug\net8.0\BidIP.genruntimeconfig.cache
 D:\Blazor\BidIP\BIdIP-BidIP_CZY_20241116\BidIP\obj\Debug\net8.0\ref\BidIP.dll
+D:\Blazor\BidIP\BIdIP-BidIP_CZY_20241116\BidIP\obj\Debug\net8.0\BidIP.sourcelink.json

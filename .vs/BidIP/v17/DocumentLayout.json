@@ -100,7 +100,7 @@
               "RelativeDocumentMoniker": "BidIP\\Components\\Layout\\NavMenu.razor",
               "ToolTip": "D:\\Blazor\\BidIP\\BIdIP-BidIP_CZY_20241116\\BidIP\\Components\\Layout\\NavMenu.razor",
               "RelativeToolTip": "BidIP\\Components\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvwYAAABgAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-11-16T12:43:47.057Z",
               "EditorCaption": ""
@@ -115,8 +115,7 @@
               "RelativeToolTip": "BidIP\\Components\\Pages\\Admin Actions\\GroupMudDrawer.razor",
               "ViewState": "AgIAAEIAAAAAAAAAAAAewFkAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T11:46:34.027Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T11:46:34.027Z"
             },
             {
               "$type": "Document",
@@ -128,8 +127,7 @@
               "RelativeToolTip": "BidIP\\Components\\Pages\\Admin Actions\\Group.razor",
               "ViewState": "AgIAAEgAAAAAAAAAAAAewCMAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T04:36:37.67Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T04:36:37.67Z"
             },
             {
               "$type": "Document",
@@ -141,8 +139,7 @@
               "RelativeToolTip": "BidIP\\Program.cs",
               "ViewState": "AgIAABUAAAAAAAAAAADwvyIAAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-16T07:08:40.549Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T07:08:40.549Z"
             },
             {
               "$type": "Document",
@@ -178,8 +175,7 @@
               "RelativeToolTip": "BidIP\\Components\\Pages\\BidIPComponents\\AddGroupMudDialog.razor",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAAAIAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T06:21:59.365Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T06:21:59.365Z"
             },
             {
               "$type": "Document",
@@ -203,8 +199,7 @@
               "RelativeToolTip": "BidIP\\Components\\Pages\\BidIp.razor",
               "ViewState": "AgIAADkAAAAAAAAAAAAAAI4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T05:48:57.173Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T05:48:57.173Z"
             },
             {
               "$type": "Document",
@@ -216,8 +211,7 @@
               "RelativeToolTip": "BidIP\\Components\\Pages\\BidIPComponents\\MyMudDrawer.razor",
               "ViewState": "AgIAAFcAAAAAAAAAAAAAAI8AAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T05:15:52.71Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T05:15:52.71Z"
             },
             {
               "$type": "Document",
@@ -229,8 +223,7 @@
               "RelativeToolTip": "BidIP\\Models\\MachineCategory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-16T05:05:31.027Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T05:05:31.027Z"
             },
             {
               "$type": "Document",
@@ -242,8 +235,7 @@
               "RelativeToolTip": "BidIP\\Components\\Pages\\BidIPComponents\\Table.razor",
               "ViewState": "AgIAAEUAAAAAAAAAAADwvzUAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-16T05:03:17.469Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-16T05:03:17.469Z"
             },
             {
               "$type": "Document",
