@@ -1,0 +1,100 @@
+﻿@page "/group"
+@using BidIP.Models
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<MudTable Items="@MachineCategorys" Dense="true" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Group Table</MudText>
+        <MudSpacer />
+        <MudFab EndIcon="@Icons.Material.Filled.Add" Label="Add Group" Size="Size.Small" OnClick="AddGroup" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>Count</MudTh>
+        <MudTh>Edit</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+        <MudTd DataLabel="Count">@context.MachineDetailInfo.ToList().Count</MudTd>
+        <MudTd DataLabel="Edit">
+            <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="@Color.Error" OnClick="() => editGroup(context)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="@Color.Error" OnClick="() => deleteGroup(context.Id)" />
+            </MudButtonGroup>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<GroupMudDrawer @ref="groupMudDrawer" type="@_type" myDictionary="myDictionary" MachineCategorys="MachineCategorys" />
+
+@code {
+    private GroupMudDrawer groupMudDrawer;
+    private IEnumerable<MachineCategory> MachineCategorys;
+    private Boolean _loading = false;
+    private bool _open;
+    private string _type;
+    private Dictionary<string, bool> myDictionary = new Dictionary<string, bool>
+    {
+        {"_open", false}
+    };
+    private string responseMessage;
+    private int editId = 0;
+    [CascadingParameter] public bool isLoading { get; set; }
+    [CascadingParameter] public EventCallback<bool> isLoadingChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var context = DbFactory.CreateDbContext();
+        MachineCategorys = context.MachineCategory.Include(m => m.MachineDetailInfo);
+    }
+
+    private void AddGroup()
+    {
+        myDictionary["_open"] = true;
+        _type = "add";
+    }
+
+    private void editGroup(MachineCategory machineCategory)
+    {
+        myDictionary["_open"] = true;
+        _type = "edit";
+        groupMudDrawer.SetGroupDrawerInfo(machineCategory);
+    }
+
+    private async Task deleteGroup(int id)
+    {
+        await isLoadingChanged.InvokeAsync(true);
+        try
+        {
+            var context = DbFactory.CreateDbContext();
+            var machineDetailInfos = context.MachineDetailInfo.Where(m => m.MachineCategoryId == id).ToList();
+            foreach(var machineDetailInfo in machineDetailInfos)
+            {
+                machineDetailInfo.MachineCategoryId = 1;
+                context.Attach(machineDetailInfo!).State = EntityState.Modified;
+            }
+            var machineCategory = await context.MachineCategory.FirstOrDefaultAsync(m => m.Id == id);
+            context.MachineCategory.Remove(machineCategory!);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            responseMessage = $"提交失败: {ex.Message}";
+        }
+        finally
+        {
+            _open = false;
+            await isLoadingChanged.InvokeAsync(false);
+            var context = DbFactory.CreateDbContext();
+            MachineCategorys = context.MachineCategory.Include(m => m.MachineDetailInfo);
+        }
+    }
+}

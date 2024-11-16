@@ -1,0 +1,64 @@
+﻿@page "/machinedetailinfos/create"
+@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>MachineDetailInfo</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="MachineDetailInfo" OnValidSubmit="AddMachineDetailInfo" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="MachineDetailInfo.Name" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ipaddress" class="form-label">IpAddress:</label> 
+                <InputText id="ipaddress" @bind-Value="MachineDetailInfo.IpAddress" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.IpAddress" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="lasttime" class="form-label">LastTime:</label> 
+                <InputDate id="lasttime" @bind-Value="MachineDetailInfo.LastTime" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.LastTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="lastssytime" class="form-label">LastSSYTime:</label> 
+                <InputDate id="lastssytime" @bind-Value="MachineDetailInfo.LastSSYTime" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.LastSSYTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ssycount" class="form-label">SsyCount:</label> 
+                <InputNumber id="ssycount" @bind-Value="MachineDetailInfo.SsyCount" class="form-control" /> 
+                <ValidationMessage For="() => MachineDetailInfo.SsyCount" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/machinedetailinfos">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private MachineDetailInfo MachineDetailInfo { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddMachineDetailInfo()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.MachineDetailInfo.Add(MachineDetailInfo);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/machinedetailinfos");
+    }
+}

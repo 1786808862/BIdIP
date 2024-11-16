@@ -1,0 +1,115 @@
+﻿@using BidIP.Models
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<MudDrawer @bind-Open="@myDictionary["_open"]" Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary" OverlayAutoClose Width="300px">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6">Add Group</MudText>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudForm @ref="form" Style="margin: 0 20px">
+            <MudTextField @bind-Value="machineCategory.Name" Label="Please Input Name" Style="margin: 20px 0;" />
+            <MudTextField @bind-Value="machineCategory.Description" Label="Please Input Description" Lines="5" Variant="Variant.Outlined" MaxLength="100" Counter="100" Immediate="true" Style="margin: 20px 0;" />
+            <MudCheckBox @bind-Value="_checked">Add machines with the group name as the prefix to this group</MudCheckBox>
+            <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Variant="Variant.Filled" FullWidth=" true " OnClick="HandleSubmit" Style="margin: 20px 0;">Submit</MudButton>
+        </MudForm>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    private MudForm form;
+    private MachineCategory machineCategory = new();
+    private bool _checked = false;
+    private string responseMessage;
+    [CascadingParameter] public bool isLoading { get; set; }
+    [CascadingParameter] public EventCallback<bool> isLoadingChanged { get; set; }
+    [Parameter]
+    public IEnumerable<MachineCategory> MachineCategorys { get; set; }
+    [Parameter]
+    public string type { get; set; }
+    [Parameter]
+    public Dictionary<string, bool> myDictionary { get; set; } = new Dictionary<string, Boolean>()
+    {
+        {"_open", false }
+    };
+
+
+
+    private async Task HandleSubmit()
+    {
+        await isLoadingChanged.InvokeAsync(true);
+        if (type.Equals("add"))
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(machineCategory.Description))
+                {
+                    machineCategory.Description = "No Description";
+                }
+                var context = DbFactory.CreateDbContext();
+                await context.MachineCategory.AddAsync(machineCategory);
+                int result = await context.SaveChangesAsync();
+                if (result > 0 && _checked)
+                {
+                    await AddGroupWithMachine(machineCategory.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                responseMessage = $"提交失败: {ex.Message}";
+            }
+            finally
+            {
+                myDictionary["_open"] = false;
+                await isLoadingChanged.InvokeAsync(false);
+                var context = DbFactory.CreateDbContext();
+                machineCategory = new();
+                MachineCategorys = context.MachineCategory.Include(m => m.MachineDetailInfo);
+            }
+        } else
+        {
+            try
+            {
+                var context = DbFactory.CreateDbContext();
+                context.Attach(machineCategory!).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                await AddGroupWithMachine(machineCategory.Name);
+            }
+            catch (Exception ex)
+            {
+                responseMessage = $"提交失败: {ex.Message}";
+            }
+            finally
+            {
+                myDictionary["_open"] = false;
+                await isLoadingChanged.InvokeAsync(false);
+                var context = DbFactory.CreateDbContext();
+            }
+        }
+        NavigationManager.NavigateTo("/group");
+    }
+
+    private async Task AddGroupWithMachine(string addGroupName)
+    {
+        var context = DbFactory.CreateDbContext();
+        var machineCategory = await context.MachineCategory.FirstOrDefaultAsync(m => m.Name == addGroupName);
+        int id = machineCategory.Id;
+        List<MachineDetailInfo> machineDetailInfos = context.MachineDetailInfo.Where(m => m.Name.StartsWith(addGroupName)).ToList();
+        if (machineDetailInfos != null)
+        {
+            foreach (var machineDetailInfo in machineDetailInfos)
+            {
+                machineDetailInfo.MachineCategoryId = id;
+                // 批量更新所有记录
+                DbFactory.CreateDbContext().Attach(machineDetailInfo!).State = EntityState.Modified;
+            }
+            await context.SaveChangesAsync();
+        }
+    }
+
+    public void SetGroupDrawerInfo(MachineCategory machine)
+    {
+        machineCategory = machine;
+    }
+}

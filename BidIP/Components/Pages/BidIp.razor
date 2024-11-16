@@ -1,0 +1,145 @@
+﻿@page "/bidip"
+@using BidIP.Models
+@using BidIP.Components.Pages.BidIPComponents
+@using System.Linq;
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject HttpClient Http
+@inject IDialogService DialogService
+    
+<MyMudDrawer AgentInfoDictionaryChange="HandleSubmit" myDictionary="myDictionary" type="search" />
+
+<MudCard Style="margin-top: 25px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+    <MudCardContent>
+        <MudGrid Justify="Justify.SpaceBetween" Style="margin-bottom: 30px">
+            <MudItem xs="4" sm="4" md="3" lg="3" xl="5">
+                <MudButton Variant="Variant.Filled" OnClick="searchDrawer" Style="margin-right:50px">Search</MudButton>
+                <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                    <MudButton>@_selectMachineCategories</MudButton>
+                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
+                        <MudMenuItem OnClick="() =>SearchName(All)">All</MudMenuItem>
+                        @if (machineCategories != null)
+
+
+
+                        {
+                            @foreach (var machineCategory in machineCategories)
+
+
+
+                            {
+                                <MudMenuItem OnClick="() =>SearchName(machineCategory.Name)">@machineCategory.Name</MudMenuItem>
+                            }
+                        }
+                    </MudMenu>
+                </MudButtonGroup>
+            </MudItem>
+            <MudItem xs="3" sm="3" md="2" lg="1" xl="1">
+                <MudToggleGroup T="string" @bind-Value="type">
+                    <MudToggleItem Value="@("Table")">
+                        <MudIcon Icon="@Icons.Material.Filled.TableRows" />
+                    </MudToggleItem>
+                    <MudToggleItem Value="@("Grid")">
+                        <MudIcon Icon="@Icons.Material.Filled.TableView" />
+                    </MudToggleItem>
+                </MudToggleGroup>
+            </MudItem>
+        </MudGrid>
+        <DynamicComponent Type="@(type.Equals("Table") ? typeof(Table) : typeof(Grid))" Parameters="@agentInfoDictionary"></DynamicComponent>
+    </MudCardContent>
+</MudCard>
+
+
+<style>
+    .input-button-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .input-field {
+        flex-grow: 1;
+    }
+
+    .submit-button {
+        flex-shrink: 0;
+    }
+</style>
+
+@code {
+    private bool _open;
+    MachineDetailInfo machineDetailInfo = new MachineDetailInfo(1, "", "", DateTime.Now, DateTime.Now, 1);
+    private MudForm form;
+    private string name;
+    private string ipAddress;
+    private int? lastTime;
+    private int? lastSSYTime;
+    private int? ssyCount;
+    private int[] lastTimeArr = { 15, 30, 60, 300, 600 };
+    private int[] lastSSYTimeArr = { 15, 30, 60, 300, 600 };
+    private int[] ssyCountArr = { 500, 1000, 1500, 2000, 3000 };
+    private string responseMessage;
+    private int totalItems;
+    private string? _selectMachineCategories = "All";
+    private string? AddGroupValue;
+    private string All = "All";
+    private Dictionary<string, object> agentInfoDictionary = new Dictionary<string, object>();
+    private Dictionary<string, Boolean> myDictionary = new Dictionary<string, Boolean>()
+    {
+        {"_open",false}
+    };
+    private string type = "Table";
+
+    private IEnumerable<MachineCategory> machineCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<MachineDetailInfo> machineDetailInfos = await Http.GetFromJsonAsync<List<MachineDetailInfo>>("agent/status") ?? [];
+        agentInfoDictionary["agentInfo"] = machineDetailInfos.OrderBy(m => m.Id).ToList();
+        var context = DbFactory.CreateDbContext();
+        machineCategories = context.MachineCategory.OrderBy(m => m.Id == 1 ? 1 : 0) // 特定记录排在最后
+                              .ThenBy(m => m.Name);
+    }
+
+    private async Task SearchName(string MachineCategoryName)
+    {
+        _selectMachineCategories = MachineCategoryName;
+        try
+        {
+
+            var context = DbFactory.CreateDbContext();
+            IEnumerable<MachineDetailInfo>? response = null;
+            if (!MachineCategoryName.Equals("All"))
+            {
+                var machineCategory = await context.MachineCategory.FirstOrDefaultAsync(m => m.Name == MachineCategoryName);
+                response = await context.MachineDetailInfo.Where(m => m.MachineCategoryId == machineCategory.Id).ToListAsync();
+            } else
+            {
+                response = context.MachineDetailInfo;
+            }
+            if (response != null)
+            {
+                agentInfoDictionary["agentInfo"] = response.OrderBy(m => m.Id).ToList();
+                responseMessage = "表单提交成功！";
+            }
+            else
+            {
+                responseMessage = "提交失败，请重试。";
+            }
+        }
+        catch (Exception ex)
+        {
+            responseMessage = $"提交失败: {ex.Message}";
+        }
+    }
+
+    private void HandleSubmit(List<MachineDetailInfo> machineDetailInfos)
+    {
+        agentInfoDictionary["agentInfo"] = machineDetailInfos;
+    }
+
+    private void searchDrawer ()
+    {
+        myDictionary["_open"] = true;
+    }
+
+}

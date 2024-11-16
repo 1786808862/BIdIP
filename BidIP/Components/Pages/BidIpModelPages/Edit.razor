@@ -1,0 +1,109 @@
+﻿@page "/machinedetailinfos/edit"
+@using Microsoft.EntityFrameworkCore
+@using BidIP.Models
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>MachineDetailInfo</h2>
+<hr />
+@if (MachineDetailInfo is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="MachineDetailInfo" OnValidSubmit="UpdateMachineDetailInfo" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="MachineDetailInfo.Id" value="@MachineDetailInfo.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="MachineDetailInfo.Name" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="ipaddress" class="form-label">IpAddress:</label>
+                    <InputText id="ipaddress" @bind-Value="MachineDetailInfo.IpAddress" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.IpAddress" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="lasttime" class="form-label">LastTime:</label>
+                    <InputDate id="lasttime" @bind-Value="MachineDetailInfo.LastTime" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.LastTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="lastssytime" class="form-label">LastSSYTime:</label>
+                    <InputDate id="lastssytime" @bind-Value="MachineDetailInfo.LastSSYTime" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.LastSSYTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="ssycount" class="form-label">SsyCount:</label>
+                    <InputNumber id="ssycount" @bind-Value="MachineDetailInfo.SsyCount" class="form-control" />
+                    <ValidationMessage For="() => MachineDetailInfo.SsyCount" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/machinedetailinfos">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private MachineDetailInfo? MachineDetailInfo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        MachineDetailInfo ??= await context.MachineDetailInfo.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (MachineDetailInfo is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateMachineDetailInfo()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(MachineDetailInfo!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!MachineDetailInfoExists(MachineDetailInfo!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/machinedetailinfos");
+    }
+
+    private bool MachineDetailInfoExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.MachineDetailInfo.Any(e => e.Id == id);
+    }
+}

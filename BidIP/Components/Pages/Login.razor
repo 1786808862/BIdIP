@@ -1,0 +1,94 @@
+﻿@page "/login"
+@using BidIP.Models
+@using MudBlazor
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BidIP.Data.BidIPContext> DbFactory
+@inject NavigationManager Navigation
+@inject BidIP.Services.CacheService CacheService
+@inject IJSRuntime JSRuntime
+
+
+@if (showErroeMessage)
+{
+    <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseMe(false))">@errorMessage</MudAlert>
+}
+<MudGrid Justify="Justify.Center" Style="align-items:center;height:100vh">
+    <MudItem xs="12" sm="8" md="5" lg="3">
+        <MudPaper Elevation="4" Style="padding: 50px;">
+            <MudText Typo="Typo.h4" Align="Align.Center">登录</MudText>
+
+            <EditForm Model="customerInfo" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <MudTextField @bind-Value="customerInfo.Username" Label="用户名" Required="true" FullWidth="true" Margin="Margin.Normal" />
+                <MudTextField @bind-Value="customerInfo.Password" Label="密码" InputType="InputType.Password" Required="true" FullWidth="true" Margin="Margin.Normal" />
+
+                <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" FullWidth="true" Variant="Variant.Filled" Style="margin-top:50px">登录</MudButton>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+@code {
+    private CustomerInfo customerInfo = new();
+    private string browserInfo;
+    private string errorMessage;
+    private Boolean showErroeMessage = false;
+    [CascadingParameter] public bool isLoading { get; set; }
+    [CascadingParameter] public EventCallback<bool> isLoadingChanged { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // 仅在第一次渲染时调用 JSInterop
+            browserInfo = await JSRuntime.InvokeAsync<string>("getBrowserInfo");
+            StateHasChanged(); // 手动触发组件重新渲染
+        }
+    }
+    private async void HandleLogin()
+    {
+        await isLoadingChanged.InvokeAsync(true);
+        using var context = DbFactory.CreateDbContext();
+        // List<CustomerInfo> customer =  context.CustomerInfo.Where(customer => customer.Username.Equals(customerInfo.Username) && customer.Password.Equals(customerInfo.Password)).ToList();
+
+        var customer = context.CustomerInfo.FirstOrDefault(m => m.Username == customerInfo.Username && m.Password == customerInfo.Password);
+        if (customer != null)
+        {
+            string[] customerLoginInfo = new string[] { customer.Username, customer.Password };
+            List<string[]> catchCustomerInfo = CacheService.GetUserData(customer.Id.ToString());
+            if (catchCustomerInfo == null)
+            {
+                List<string[]> userData = new List<string[]>();
+                userData.Add(customerLoginInfo);
+                CacheService.SetUserData(customer.Id.ToString(), userData);
+                Console.WriteLine(CacheService);
+            }
+            Navigation.NavigateTo("/");
+        }
+        else if (context.CustomerInfo.FirstOrDefault(m => m.Username == customerInfo.Username) == null)
+        {
+            showErroeMessage = true;
+            errorMessage = "用户名不存在";
+        } else
+        {
+            showErroeMessage = true;
+            errorMessage = "用户名或密码错误";
+        }
+        await Task.Delay(2000);
+        await isLoadingChanged.InvokeAsync(false);
+    }
+
+    private void CloseMe(bool value)
+    {
+        if (value)
+        {
+            showErroeMessage = false;
+        }
+        else
+        {
+            showErroeMessage = false;
+        }
+    }
+
+}
